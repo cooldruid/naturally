@@ -3,7 +3,7 @@ import { useFonts } from 'expo-font';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Stack } from 'expo-router';
+import { Slot, Stack } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 
 export default function RootLayout() {
@@ -20,10 +20,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <View style={{ flex: 1 }}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="screens/scanner/scanner" options={{ title: '' }}/>
-          <Stack.Screen name="screens/product-details/product-details" options={{ title: '' }} />
-        </Stack>
+        <Slot/>
       </View>
     </ThemeProvider>
   );

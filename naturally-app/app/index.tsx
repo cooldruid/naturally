@@ -1,7 +1,13 @@
-import { Stack } from "expo-router";
+import { useRouter } from "expo-router";
+import { useEffect } from "react";
+
 
 export default function Index() {
-    return (
-        <Stack.Screen name='screens/scanner/scanner'/>
-    )
+    const router = useRouter();
+
+    useEffect(() => {
+        setTimeout(() => router.replace('/screens/scanner/scanner'), 0);
+    }, [router]);
+
+    return null;
 }
