@@ -4,7 +4,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Stack } from 'expo-router';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();

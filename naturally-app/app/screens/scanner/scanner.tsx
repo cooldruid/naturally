@@ -1,11 +1,12 @@
 import { Image } from 'expo-image';
-import { StyleSheet, View } from 'react-native';
+import { Alert, Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { TextInput } from 'react-native';
 import { IconButton, PaperProvider, Text } from 'react-native-paper';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
+import { getOpenFoodFactsProductData } from '@/app/clients/open-food-facts-client';
 
 export default function ScannerScreen() {
   const [barcode, setBarcode] = useState('');
@@ -13,10 +14,14 @@ export default function ScannerScreen() {
 
   const getProductData = async (barcode: string) => {
     try {
-      console.log('calling api...');
-      const response = await fetch(`https://world.openfoodfacts.org/api/v2/product/${barcode}`);
-      const json = await response.json();
-      router.push({pathname: '/screens/product-details/product-details', params: { json: JSON.stringify(json) }});
+      const product = await getOpenFoodFactsProductData(barcode);
+
+      if(!product) {
+        Alert.alert('Product not found. Consider contributing to Open Food Facts!');
+        return;
+      }
+
+      router.navigate({pathname: '/screens/product-details/product-details', params: { productJson: JSON.stringify(product) }});
     }
     catch(error: any) {
       console.error(error);
@@ -33,21 +38,25 @@ export default function ScannerScreen() {
             style={styles.logo}
           />
         }>
-        <View style={styles.container}>
-          <Text>Enter a barcode to check:</Text>
-          <View style={styles.row}>
-            <TextInput 
-              style={styles.input}
-              onChangeText={newBarcode => setBarcode(newBarcode)}>
-            </TextInput>
-            <IconButton 
-              mode='contained'
-              icon='magnify'
-              onPress={async () => {console.log('will call now...'); await getProductData(barcode)}}
-              style={styles.iconButton}>
-            </IconButton>
-          </View>
-        </View>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <View style={styles.container}>
+              <Text>Enter a barcode to check:</Text>
+              <View style={styles.row}>
+                <TextInput 
+                  style={styles.input}
+                  keyboardType='numeric'
+                  onChangeText={newBarcode => setBarcode(newBarcode)}>
+                </TextInput>
+                <IconButton 
+                  mode='contained'
+                  icon='magnify'
+                  onPress={async () => {console.log('will call now...'); await getProductData(barcode)}}
+                  style={styles.iconButton}>
+                </IconButton>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        
       </ParallaxScrollView>
     </PaperProvider>
     
