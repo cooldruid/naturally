@@ -3,7 +3,7 @@ import { Alert, Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'rea
 
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { TextInput } from 'react-native';
-import { IconButton, PaperProvider, Text } from 'react-native-paper';
+import { Button, Divider, IconButton, PaperProvider, Text } from 'react-native-paper';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { getOpenFoodFactsProductData } from '@/app/clients/open-food-facts-client';
@@ -28,6 +28,10 @@ export default function ScannerScreen() {
     }
   };
 
+  const navigateToCamera = () => {
+    router.navigate({pathname: '/screens/camera/camera'});
+  }
+
   return (
     <PaperProvider>
       <ParallaxScrollView
@@ -40,7 +44,11 @@ export default function ScannerScreen() {
         }>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={styles.container}>
-              <Text>Enter a barcode to check:</Text>
+              <Button icon='camera' mode='contained'
+                style={{marginTop: 15, marginBottom: 15}}
+                onPress={navigateToCamera}>Scan barcode</Button>
+              <Divider style={{marginBottom: 15}}></Divider>
+              <Text>Or, input the barcode yourself:</Text>
               <View style={styles.row}>
                 <TextInput 
                   style={styles.input}
@@ -80,7 +88,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     borderColor: "gray",
-    backgroundColor: "white"
+    backgroundColor: "white",
+    color: 'black'
   },
   row: {
     flexDirection: 'row',

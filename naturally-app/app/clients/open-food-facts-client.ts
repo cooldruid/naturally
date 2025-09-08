@@ -10,16 +10,15 @@ const apiClient = axios.create({
 
 export async function getOpenFoodFactsProductData(barcode: string): Promise<Product | undefined> {
     try{
-        const resp = await apiClient.get<OpenFoodFactsProductResponse>(`/product/${barcode}?
-        product_type=all&
-        fields=image_url%2C
-        ingredients%2C
-        ingredients_analysis_tags%2C
-        product_name%2C
-        brands&2C
-        quantity`);
+        const resp = await apiClient.get<OpenFoodFactsProductResponse>(`/product/${barcode}`, {
+            params: {
+                product_type: 'all',
+                fields: 'image_url,ingredients,ingredients_analysis_tags,product_name,brands,quantity'
+            }
+        });
 
         const productResponse = resp.data;
+        console.log(productResponse);
 
         if(productResponse.status == 0)
             return undefined;
@@ -30,13 +29,13 @@ export async function getOpenFoodFactsProductData(barcode: string): Promise<Prod
             brand: productResponse.product.brands,
             quantity: productResponse.product.quantity,
             imageUrl: productResponse.product.image_url,
-            isVegan: productResponse.product.ingredients_analysis_tags.includes('en:vegan') ? YesNoMaybe.Yes :
-                productResponse.product.ingredients_analysis_tags.includes('en:non-vegan') ? YesNoMaybe.No :
+            isVegan: productResponse.product.ingredients_analysis_tags?.includes('en:vegan') ? YesNoMaybe.Yes :
+                productResponse.product.ingredients_analysis_tags?.includes('en:non-vegan') ? YesNoMaybe.No :
                 YesNoMaybe.Maybe,
-            isVegetarian: productResponse.product.ingredients_analysis_tags.includes('en:vegeterian') ? YesNoMaybe.Yes :
-                productResponse.product.ingredients_analysis_tags.includes('en:non-vegeterian') ? YesNoMaybe.No :
+            isVegetarian: productResponse.product.ingredients_analysis_tags?.includes('en:vegeterian') ? YesNoMaybe.Yes :
+                productResponse.product.ingredients_analysis_tags?.includes('en:non-vegeterian') ? YesNoMaybe.No :
                 YesNoMaybe.Maybe,
-            ingredients: productResponse.product.ingredients.map(x => x.text).join(", ")
+            ingredients: productResponse.product.ingredients?.map(x => x.text).join(", ") ?? ''
         }
         
         return product;
