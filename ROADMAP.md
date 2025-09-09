@@ -9,3 +9,7 @@
 - [ ] Ease contribution to open apis
 - [ ] Investigate support for cosmetics (implement if possible)
 - [ ] Descriptive README and APK releases
+
+#### Later
+
+Server-side self-hosted application
