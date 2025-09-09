@@ -34,7 +34,13 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      [
+      "react-native-vision-camera",
+      {
+        "enableCodeScanner": true
+      }
+    ]
     ],
     "experiments": {
       "typedRoutes": true
