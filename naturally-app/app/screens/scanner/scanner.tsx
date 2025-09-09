@@ -1,12 +1,11 @@
 import { Image } from 'expo-image';
-import { Alert, Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
-
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { Alert, Keyboard, StyleSheet, TouchableWithoutFeedback, View, ScrollView } from 'react-native';
 import { TextInput } from 'react-native';
-import { Button, Divider, IconButton, PaperProvider, Text } from 'react-native-paper';
+import { Appbar, Button, Divider, IconButton, Text } from 'react-native-paper';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { getOpenFoodFactsProductData } from '@/app/clients/open-food-facts-client';
+import { colors } from '@/app/theme';
 
 export default function ScannerScreen() {
   const [barcode, setBarcode] = useState('');
@@ -33,40 +32,38 @@ export default function ScannerScreen() {
   }
 
   return (
-    <PaperProvider>
-      <ParallaxScrollView
-        headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-        headerImage={
-          <Image
-            source={require('@/assets/images/naturally-logo.png')}
-            style={styles.logo}
-          />
-        }>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View style={styles.container}>
-              <Button icon='camera' mode='contained'
-                style={{marginTop: 15, marginBottom: 15}}
-                onPress={navigateToCamera}>Scan barcode</Button>
-              <Divider style={{marginBottom: 15}}></Divider>
-              <Text>Or, input the barcode yourself:</Text>
-              <View style={styles.row}>
-                <TextInput 
-                  style={styles.input}
-                  keyboardType='numeric'
-                  onChangeText={newBarcode => setBarcode(newBarcode)}>
-                </TextInput>
-                <IconButton 
-                  mode='contained'
-                  icon='magnify'
-                  onPress={async () => {console.log('will call now...'); await getProductData(barcode)}}
-                  style={styles.iconButton}>
-                </IconButton>
-              </View>
+      <ScrollView>
+        <Appbar.Header style={styles.header}>
+          <Image source={require('@/assets/images/logo.png')}
+            style={styles.logo}></Image>
+        </Appbar.Header>
+          
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={styles.container}>
+            <Button icon='camera' mode='contained'
+              style={styles.button} labelStyle={styles.buttonLabel} contentStyle={{height: 60}}
+              onPress={navigateToCamera}>Scan barcode</Button>
+            <Divider style={{marginBottom: 15, backgroundColor: colors.colors.border, height: 2}}></Divider>
+            <Text style={styles.text}>Or, input the barcode yourself:</Text>
+            <View style={styles.row}>
+              <TextInput 
+                style={styles.input}
+                keyboardType='numeric'
+                onChangeText={newBarcode => setBarcode(newBarcode)}>
+              </TextInput>
+              <IconButton 
+                mode='contained'
+                icon='magnify'
+                iconColor='white'
+                containerColor={colors.colors.primary}
+                size={30}
+                style={{borderRadius: 10}}
+                onPress={async () => {await getProductData(barcode)}}>
+              </IconButton>
             </View>
-          </TouchableWithoutFeedback>
-        
-      </ParallaxScrollView>
-    </PaperProvider>
+          </View>
+        </TouchableWithoutFeedback>
+      </ScrollView>
     
   );
 }
@@ -74,29 +71,54 @@ export default function ScannerScreen() {
 const styles = StyleSheet.create({
   container: {
     gap: 8,
-    marginBottom: 8,
+    marginLeft: 20,
+    marginRight: 20,
+    top: '35%'
+  },
+  header: {
+    flex:1, 
+    justifyContent: 'center', 
+    backgroundColor: colors.colors.surface, 
+    borderBottomColor: colors.colors.border, 
+    borderBottomWidth: 2,
+    paddingEnd: 10,
+    height: '15%'
   },
   logo: {
-    height: 300,
-    width: 410,
-    top: 0,
-    left: 0,
-    position: 'absolute',
+    height: 80,
+    width: '50%',
+    alignSelf: 'center',
+    marginTop: 18
   },
   input: {
-    width: '85%',
     borderWidth: 1,
     borderRadius: 10,
     borderColor: "gray",
     backgroundColor: "white",
-    color: 'black'
+    color: 'black',
+    flex: 1,
+    fontSize: 16,
+    fontFamily: 'Merriweather_400Regular',
+    height: 47
   },
   row: {
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    alignItems: 'center'
   },
-  iconButton: {
+  button: {
+    marginTop: 15, 
+    marginBottom: 15,
     borderRadius: 10,
-    height: '100%'
+    height: 60
+  },
+  buttonLabel: {
+    fontSize: 24,
+    fontFamily: 'Merriweather_400Regular'
+  },
+  text: {
+    fontSize: 16,
+    fontFamily: 'Merriweather_400Regular',
+    textAlign: 'center'
   }
 });

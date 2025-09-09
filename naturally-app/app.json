@@ -36,11 +36,12 @@
         }
       ],
       [
-      "react-native-vision-camera",
-      {
-        "enableCodeScanner": true
-      }
-    ]
+        "react-native-vision-camera",
+        {
+          "enableCodeScanner": true
+        }
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
