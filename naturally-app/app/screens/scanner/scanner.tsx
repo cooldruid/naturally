@@ -1,33 +1,20 @@
 import { Image } from 'expo-image';
-import { Alert, Keyboard, StyleSheet, TouchableWithoutFeedback, View, ScrollView } from 'react-native';
-import { TextInput } from 'react-native';
-import { Appbar, Button, Divider, IconButton, Text } from 'react-native-paper';
+import { Keyboard, StyleSheet, TouchableWithoutFeedback, View, ScrollView } from 'react-native';
+import { Appbar, Button, Divider, IconButton } from 'react-native-paper';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
-import { getOpenFoodFactsProductData } from '@/app/clients/open-food-facts-client';
 import { colors } from '@/app/theme';
+import NaturallyText from '@/components/naturally-text';
+import NaturallyInput from '@/components/naturally-input';
+import { getAndShowProductData } from '@/app/services/food-scan-service';
+import requestPermissions from '@/app/services/permissions-service';
 
 export default function ScannerScreen() {
   const [barcode, setBarcode] = useState('');
   const router = useRouter();
 
-  const getProductData = async (barcode: string) => {
-    try {
-      const product = await getOpenFoodFactsProductData(barcode);
-
-      if(!product) {
-        Alert.alert('Product not found. Consider contributing to Open Food Facts!');
-        return;
-      }
-
-      router.navigate({pathname: '/screens/product-details/product-details', params: { productJson: JSON.stringify(product) }});
-    }
-    catch(error: any) {
-      console.error(error);
-    }
-  };
-
-  const navigateToCamera = () => {
+  const navigateToCamera = async () => {
+    await requestPermissions();
     router.navigate({pathname: '/screens/camera/camera'});
   }
 
@@ -44,13 +31,12 @@ export default function ScannerScreen() {
               style={styles.button} labelStyle={styles.buttonLabel} contentStyle={{height: 60}}
               onPress={navigateToCamera}>Scan barcode</Button>
             <Divider style={{marginBottom: 15, backgroundColor: colors.colors.border, height: 2}}></Divider>
-            <Text style={styles.text}>Or, input the barcode yourself:</Text>
+            <NaturallyText variant='medium'>Or, input the barcode yourself:</NaturallyText>
             <View style={styles.row}>
-              <TextInput 
-                style={styles.input}
+              <NaturallyInput 
                 keyboardType='numeric'
                 onChangeText={newBarcode => setBarcode(newBarcode)}>
-              </TextInput>
+              </NaturallyInput>
               <IconButton 
                 mode='contained'
                 icon='magnify'
@@ -58,7 +44,7 @@ export default function ScannerScreen() {
                 containerColor={colors.colors.primary}
                 size={30}
                 style={{borderRadius: 10}}
-                onPress={async () => {await getProductData(barcode)}}>
+                onPress={async () => {await getAndShowProductData(barcode)}}>
               </IconButton>
             </View>
           </View>
@@ -90,17 +76,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 18
   },
-  input: {
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: "gray",
-    backgroundColor: "white",
-    color: 'black',
-    flex: 1,
-    fontSize: 16,
-    fontFamily: 'Merriweather_400Regular',
-    height: 47
-  },
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -115,10 +90,5 @@ const styles = StyleSheet.create({
   buttonLabel: {
     fontSize: 24,
     fontFamily: 'Merriweather_400Regular'
-  },
-  text: {
-    fontSize: 16,
-    fontFamily: 'Merriweather_400Regular',
-    textAlign: 'center'
   }
 });

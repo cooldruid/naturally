@@ -1,7 +1,9 @@
 import { Product, YesNoMaybe } from "@/app/types/product";
+import NaturallyPill from "@/components/naturally-pill";
+import NaturallyText from "@/components/naturally-text";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
-import { ScrollView, Image, StyleSheet, View, Linking } from "react-native";
-import { Appbar, Icon, PaperProvider, Text } from "react-native-paper";
+import { ScrollView, Image, StyleSheet, View } from "react-native";
+import { Appbar, Icon, Text } from "react-native-paper";
 
 export default function ProductDetailsScreen() {
     const router = useRouter();
@@ -9,52 +11,38 @@ export default function ProductDetailsScreen() {
     const params = useLocalSearchParams<{ productJson: string }>();
     const product = JSON.parse(params.productJson) as Product;
 
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1
-        },
-        image: {
-            height: '100%',
-            width: '100%',
-            flex: 1
-        },
-        colorGreen: {
-            color: 'green'
-        }
-    })
+    let isVeganBorderColor: string = '';
+    let isVeganBackgroundColor: string = '';
 
-    let isVeganIconSource: string = '';
-    let isVeganIconColor: string = '';
-
-    let isVegetarianIconSource: string = '';
-    let isVegetarianIconColor: string = '';
+    let isVegetarianBorderColor: string = '';
+    let isVegetarianBackgroundColor: string = '';
 
     // vegan checks
     if(product.isVegan == YesNoMaybe.Yes) {
-        isVeganIconSource = 'check-circle';
-        isVeganIconColor = 'green';
+        isVeganBorderColor = yesBorderColor;
+        isVeganBackgroundColor = yesBackgroundColor;
     }
     else if(product.isVegan == YesNoMaybe.No) {
-        isVeganIconSource = 'close-circle';
-        isVeganIconColor = 'red';
+        isVeganBorderColor = noBorderColor;
+        isVeganBackgroundColor = noBackgroundColor;
     }
     else {
-        isVeganIconSource = 'help-circle';
-        isVeganIconColor = 'yellow';
+        isVeganBorderColor = maybeBorderColor;
+        isVeganBackgroundColor = maybeBackgroundColor;
     }
 
     // vegetarian checks
     if(product.isVegan == YesNoMaybe.Yes || product.isVegetarian == YesNoMaybe.Yes) {
-        isVegetarianIconSource = 'check-circle';
-        isVegetarianIconColor = 'green';
+        isVegetarianBorderColor = yesBorderColor;
+        isVegetarianBackgroundColor = yesBackgroundColor;
     }
     else if(product.isVegetarian == YesNoMaybe.No) {
-        isVegetarianIconSource = 'close-circle';
-        isVegetarianIconColor = 'red';
+        isVegetarianBorderColor = noBorderColor;
+        isVegetarianBackgroundColor = noBackgroundColor;
     }
     else {
-        isVegetarianIconSource = 'help-circle';
-        isVegetarianIconColor = 'yellow';
+        isVegetarianBorderColor = maybeBorderColor;
+        isVegetarianBackgroundColor = maybeBackgroundColor;
     }
 
     return (
@@ -68,24 +56,52 @@ export default function ProductDetailsScreen() {
                         style={styles.image}
                         resizeMode="contain"
                     />
-                <Text variant='displaySmall'>{product.name} - {product.brand} - {product.quantity}</Text>
-                <View style={{flex: 1, flexDirection: 'row', alignContent: 'space-between'}}>
-                    <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                        <Text variant='titleLarge'>Vegan:</Text>
-                        <Icon source={isVeganIconSource}
-                            color={isVeganIconColor}
-                            size={40}/>
+                <View style={{marginLeft: 10, marginRight: 10}}>
+                    <NaturallyText variant='title'>{product.name} - {product.brand} - {product.quantity}</NaturallyText>
+                    <View style={{marginTop: 10, justifyContent: 'space-evenly', flexDirection: 'row'}}>
+                        <NaturallyPill backgroundColor={isVeganBackgroundColor} borderColor={isVeganBorderColor}>
+                            <View style={{justifyContent: 'space-evenly', flexDirection: 'row'}}>
+                                <Icon source="leaf" size={35} color={isVeganBorderColor} />
+                                <NaturallyText variant="large">Vegan</NaturallyText>
+                            </View>
+                        </NaturallyPill>
+                        <NaturallyPill backgroundColor={isVegetarianBackgroundColor} borderColor={isVegetarianBorderColor}>
+                            <View style={{justifyContent: 'space-evenly', flexDirection: 'row'}}>
+                                <Icon source="food-variant" size={35} color={isVegetarianBorderColor} />
+                                <NaturallyText variant="large">Vegetarian</NaturallyText>
+                            </View>
+                        </NaturallyPill>
                     </View>
-                    <View style={{flex: 2, flexDirection: 'row', alignItems: 'center'}}>
-                        <Text variant='titleLarge'>Vegetarian:</Text>
-                        <Icon source={isVegetarianIconSource} 
-                            color={isVegetarianIconColor}
-                            size={40}/>
+                    <View style={{marginTop: 15}}>
+                        <NaturallyText variant='medium'>Ingredients: {product.ingredients}</NaturallyText>
+                    </View>
+                    <View style={{marginTop: 15}}>
+                        <NaturallyText variant='small'>Data by <Link href='https://openfoodfacts.org' style={{textDecorationLine: 'underline'}}>Open Food Facts</Link></NaturallyText>
                     </View>
                 </View>
-                <Text variant='bodyLarge'>Ingredients: {product.ingredients}</Text>
-                <Text variant='bodyMedium'>Data by <Link href='https://openfoodfacts.org' style={{textDecorationLine: 'underline'}}>Open Food Facts</Link></Text>
             </ScrollView>
         </>
     )
 }
+
+const yesBorderColor = '#5C9225';
+const noBorderColor = '#D64545';
+const maybeBorderColor = '#D1A23D';
+const yesBackgroundColor = '#EAF5E1';
+const noBackgroundColor = '#FCEAEA';
+const maybeBackgroundColor = '#FFF8E5';
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    image: {
+        height: 250,
+        width: '100%',
+        alignSelf: 'center',
+        marginTop: 15
+    },
+    colorGreen: {
+        color: 'green'
+    }
+})

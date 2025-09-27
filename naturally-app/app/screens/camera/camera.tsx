@@ -1,33 +1,10 @@
-import { getOpenFoodFactsProductData } from '@/app/clients/open-food-facts-client';
-import { useRouter } from 'expo-router';
+import { getAndShowProductData } from '@/app/services/food-scan-service';
 import { useRef, useState } from 'react';
 import { Alert } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
 
 export default function CameraScreen() {
     const [barcode, setBarcode] = useState<string | null>(null);
-    const router = useRouter();
-
-    const getProductData = async (barcode: string) => {
-        try {
-            const product = await getOpenFoodFactsProductData(barcode);
-
-            if(!product) {
-                Alert.alert('Product not found.', 'Consider contributing to Open Food Facts!', [
-                    {
-                        text: 'OK',
-                        onPress: () => setBarcode(null)
-                    }]);
-                
-                return;
-            }
-
-            router.navigate({pathname: '/screens/product-details/product-details', params: { productJson: JSON.stringify(product) }});
-        }
-        catch(error: any) {
-            console.error(error);
-        }
-    };
 
     const device = useCameraDevice('back');
 
@@ -40,7 +17,7 @@ export default function CameraScreen() {
 
     const codeScanner = useCodeScanner({
         codeTypes: ['ean-13'],
-        onCodeScanned: (codes) => {
+        onCodeScanned: async (codes) => {
             if(barcode)
                 return;
 
@@ -56,7 +33,11 @@ export default function CameraScreen() {
             if (lastScans.current.length >= 3 &&
                 lastScans.current.slice(-3).every((v) => v === value)){
                     setBarcode(value);
-                    getProductData(value);
+                    const isSuccess = await getAndShowProductData(value);
+
+                    if(!isSuccess) {
+                        setBarcode(null);
+                    }
                 }
         }
     })
