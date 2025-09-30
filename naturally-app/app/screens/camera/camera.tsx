@@ -1,10 +1,11 @@
 import { getAndShowProductData } from '@/app/services/food-scan-service';
 import { useRef, useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, View } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
 
 export default function CameraScreen() {
     const [barcode, setBarcode] = useState<string | null>(null);
+    const [isScanning, setIsScanning] = useState<boolean>(true);
 
     const device = useCameraDevice('back');
 
@@ -33,7 +34,7 @@ export default function CameraScreen() {
             if (lastScans.current.length >= 3 &&
                 lastScans.current.slice(-3).every((v) => v === value)){
                     setBarcode(value);
-                    const isSuccess = await getAndShowProductData(value);
+                    const isSuccess = await getAndShowProductData(value, () => setIsScanning(false));
 
                     if(!isSuccess) {
                         setBarcode(null);
@@ -41,6 +42,9 @@ export default function CameraScreen() {
                 }
         }
     })
+
+    if(!isScanning)
+        return <View/>
 
     return <Camera style={{ flex: 1 }}
         device={device}

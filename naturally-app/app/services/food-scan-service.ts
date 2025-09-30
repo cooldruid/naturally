@@ -3,7 +3,9 @@ import { getOpenFoodFactsProductData } from "../clients/open-food-facts-client";
 import { useRouter } from "expo-router";
 import showSimpleAsyncAlert from "./alert-service";
 
-export async function getAndShowProductData(barcode: string): Promise<boolean> {
+export async function getAndShowProductData(
+    barcode: string,
+    onSuccess: (() => void) = () => {}): Promise<boolean> {
     try {
         const router = useRouter();
         const product = await getOpenFoodFactsProductData(barcode);
@@ -18,6 +20,7 @@ export async function getAndShowProductData(barcode: string): Promise<boolean> {
             return false;
         }
 
+        onSuccess();
         router.navigate({pathname: '/screens/product-details/product-details', params: { productJson: JSON.stringify(product) }});
 
         return true;
