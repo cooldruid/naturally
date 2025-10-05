@@ -6,9 +6,11 @@ export type NaturallyInputProps = {
     onChangeText: ((text: string) => void);
 }
 
-const NaturallyInput: React.FC<NaturallyInputProps> = ({keyboardType, onChangeText}) => {
+const NaturallyInputComponent: React.FC<NaturallyInputProps> = ({keyboardType, onChangeText}) => {
     return <TextInput style={styles.input} keyboardType={keyboardType} onChangeText={onChangeText} />
 }
+
+const NaturallyInput = React.memo(NaturallyInputComponent);
 
 export default NaturallyInput;
 
@@ -21,7 +23,6 @@ const styles = StyleSheet.create({
     color: 'black',
     flex: 1,
     fontSize: 16,
-    fontFamily: 'Merriweather_400Regular',
     height: 47
   }
 });

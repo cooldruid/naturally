@@ -34,10 +34,10 @@ export default function ScannerScreen() {
             <NaturallyText variant='medium'>Or, input the barcode yourself:</NaturallyText>
             <View style={styles.row}>
               <NaturallyInput 
-                keyboardType='numeric'
-                onChangeText={newBarcode => setBarcode(newBarcode)}>
+                keyboardType='number-pad'
+                onChangeText={setBarcode}>
               </NaturallyInput>
-              <IconButton 
+              <IconButton
                 mode='contained'
                 icon='magnify'
                 iconColor='white'
