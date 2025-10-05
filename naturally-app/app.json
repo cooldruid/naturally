@@ -17,7 +17,8 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.cooldruid.naturallyapp"
+      "package": "com.cooldruid.naturallyapp",
+      "label": "Naturally"
     },
     "web": {
       "bundler": "metro",

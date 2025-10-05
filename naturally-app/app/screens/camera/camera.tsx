@@ -8,6 +8,7 @@ export default function CameraScreen() {
     const [isScanning, setIsScanning] = useState<boolean>(true);
 
     const device = useCameraDevice('back');
+    const cameraRef = useRef<Camera>(null);
 
     if(!device){
         Alert.alert('Could not access camera');
@@ -47,8 +48,9 @@ export default function CameraScreen() {
         return <View/>
 
     return <Camera style={{ flex: 1 }}
+        ref={cameraRef}
         device={device}
-        isActive={true}
+        isActive={isScanning}
         codeScanner={codeScanner}
       />
 }
