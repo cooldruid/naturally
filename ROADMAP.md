@@ -2,7 +2,7 @@
 
 - [x] View product by typing in barcode
 - [x] View product by scanning with camera
-- [ ] More professional design
+- [x] More professional design (sort of)
 - [ ] Vegan/vegetarian config
 - [ ] Country config
 - [ ] DeepL translation (with input for api key)

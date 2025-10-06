@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "naturally-app",
+    "name": "Naturally",
     "slug": "naturally-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo_small.png",
     "scheme": "naturallyapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -12,35 +12,32 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
       "edgeToEdgeEnabled": true,
       "package": "com.cooldruid.naturallyapp"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/logo_small.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/logo_small.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
       ],
       [
-      "react-native-vision-camera",
-      {
-        "enableCodeScanner": true
-      }
-    ]
+        "react-native-vision-camera",
+        {
+          "enableCodeScanner": true
+        }
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

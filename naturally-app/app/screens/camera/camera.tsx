@@ -1,34 +1,14 @@
-import { getOpenFoodFactsProductData } from '@/app/clients/open-food-facts-client';
+import { getProductData } from '@/app/services/food-scan-service';
 import { useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Platform, Text } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
 
 export default function CameraScreen() {
     const [barcode, setBarcode] = useState<string | null>(null);
+    const [isActive, setIsActive] = useState<boolean>(true);
+
     const router = useRouter();
-
-    const getProductData = async (barcode: string) => {
-        try {
-            const product = await getOpenFoodFactsProductData(barcode);
-
-            if(!product) {
-                Alert.alert('Product not found.', 'Consider contributing to Open Food Facts!', [
-                    {
-                        text: 'OK',
-                        onPress: () => setBarcode(null)
-                    }]);
-                
-                return;
-            }
-
-            router.navigate({pathname: '/screens/product-details/product-details', params: { productJson: JSON.stringify(product) }});
-        }
-        catch(error: any) {
-            console.error(error);
-        }
-    };
-
     const device = useCameraDevice('back');
 
     if(!device){
@@ -40,7 +20,7 @@ export default function CameraScreen() {
 
     const codeScanner = useCodeScanner({
         codeTypes: ['ean-13'],
-        onCodeScanned: (codes) => {
+        onCodeScanned: async (codes) => {
             if(barcode)
                 return;
 
@@ -56,14 +36,26 @@ export default function CameraScreen() {
             if (lastScans.current.length >= 3 &&
                 lastScans.current.slice(-3).every((v) => v === value)){
                     setBarcode(value);
-                    getProductData(value);
+                    const product = await getProductData(value);
+
+                    if(product) {
+                        setIsActive(false);
+
+                        setTimeout(
+                            () => router.navigate({pathname: '/screens/product-details/product-details', params: { productJson: JSON.stringify(product) }}),
+                            500);
+                    }
                 }
         }
     })
 
-    return <Camera style={{ flex: 1 }}
-        device={device}
-        isActive={true}
-        codeScanner={codeScanner}
-      />
+    return <>
+        {Platform.OS === 'android' && ( <Text style={{ zIndex: 1, position: 'absolute'}} >{' '}</Text> )} 
+        <Camera style={{flex: 1}}
+            device={device}
+            isActive={isActive}
+            codeScanner={codeScanner}
+        />
+    </>
+    
 }
