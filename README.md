@@ -1,10 +1,9 @@
-<div style="text-align: center">
+<div align=center>
     <img src="/naturally-app/assets/images/logo.png" style="height: 130px;">
     <p style="font-weight: bold">Make sustainable choices easier</p>
 </div>
 
----
-
+## Introduction
 
 For people who are looking to make sustainable choices at the store, life can quickly become difficult. Is this product vegan? Is this brand cruelty-free? A few Google searches solve the problem but this solution quickly goes out of hand as you do it for any new product you encounter.
 
