@@ -1,13 +1,10 @@
-import { Alert } from "react-native";
 import { getOpenFoodFactsProductData } from "../clients/open-food-facts-client";
-import { useRouter } from "expo-router";
 import showSimpleAsyncAlert from "./alert-service";
+import { Product } from "../types/product";
 
-export async function getAndShowProductData(
-    barcode: string,
-    onSuccess: (() => void) = () => {}): Promise<boolean> {
+export async function getProductData(
+    barcode: string): Promise<Product | undefined> {
     try {
-        const router = useRouter();
         const product = await getOpenFoodFactsProductData(barcode);
 
         if(!product) {
@@ -17,19 +14,15 @@ export async function getAndShowProductData(
 
             console.log('error123');
             
-            return false;
+            return undefined;
         }
-
-        onSuccess();
-        router.navigate({pathname: '/screens/product-details/product-details', params: { productJson: JSON.stringify(product) }});
-
-        return true;
+        return product;
     }
     catch(error: any) {
         await showSimpleAsyncAlert(
                 'Error',
                 'Unexpected error occurred');
         console.error(error);
-        return false;
+        return undefined;
     }
 }

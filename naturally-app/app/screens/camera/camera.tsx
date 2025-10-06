@@ -1,14 +1,14 @@
-import { getAndShowProductData } from '@/app/services/food-scan-service';
-import { useIsFocused } from '@react-navigation/native';
-import { useRef, useState } from 'react';
-import { Alert, View } from 'react-native';
+import { getProductData } from '@/app/services/food-scan-service';
+import { useRouter } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
+import { Alert, Platform, Text } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
 
 export default function CameraScreen() {
     const [barcode, setBarcode] = useState<string | null>(null);
+    const [isActive, setIsActive] = useState<boolean>(true);
 
-    const isFocused = useIsFocused();
-
+    const router = useRouter();
     const device = useCameraDevice('back');
 
     if(!device){
@@ -17,6 +17,12 @@ export default function CameraScreen() {
     }
 
     const lastScans = useRef<string[]>([]);
+
+    useEffect(() => {
+        return () => {
+            console.log('CameraScreen unmounted');
+        };
+    }, []);
 
     const codeScanner = useCodeScanner({
         codeTypes: ['ean-13'],
@@ -36,18 +42,26 @@ export default function CameraScreen() {
             if (lastScans.current.length >= 3 &&
                 lastScans.current.slice(-3).every((v) => v === value)){
                     setBarcode(value);
-                    const isSuccess = await getAndShowProductData(value);
+                    const product = await getProductData(value);
 
-                    if(!isSuccess) {
-                        setBarcode(null);
+                    if(product) {
+                        setIsActive(false);
+
+                        setTimeout(
+                            () => router.navigate({pathname: '/screens/product-details/product-details', params: { productJson: JSON.stringify(product) }}),
+                            500);
                     }
                 }
         }
     })
 
-    return <Camera style={{ flex: 1 }}
-        device={device}
-        isActive={isFocused}
-        codeScanner={codeScanner}
-      />
+    return <>
+        {Platform.OS === 'android' && ( <Text style={{ zIndex: 1, position: 'absolute'}} >{' '}</Text> )} 
+        <Camera style={{flex: 1}}
+            device={device}
+            isActive={isActive}
+            codeScanner={codeScanner}
+        />
+    </>
+    
 }

@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 import { colors } from '@/app/theme';
 import NaturallyText from '@/components/naturally-text';
 import NaturallyInput from '@/components/naturally-input';
-import { getAndShowProductData } from '@/app/services/food-scan-service';
+import { getProductData } from '@/app/services/food-scan-service';
 import requestPermissions from '@/app/services/permissions-service';
 
 export default function ScannerScreen() {
@@ -16,6 +16,16 @@ export default function ScannerScreen() {
   const navigateToCamera = async () => {
     await requestPermissions();
     router.navigate({pathname: '/screens/camera/camera'});
+  }
+
+  const onSearch = async() => {
+    const product = await getProductData(barcode);
+
+    if(product) {
+        setTimeout(
+            () => router.navigate({pathname: '/screens/product-details/product-details', params: { productJson: JSON.stringify(product) }}),
+            500);
+    }
   }
 
   return (
@@ -44,7 +54,7 @@ export default function ScannerScreen() {
                 containerColor={colors.colors.primary}
                 size={30}
                 style={{borderRadius: 10}}
-                onPress={async () => {await getAndShowProductData(barcode)}}>
+                onPress={onSearch}>
               </IconButton>
             </View>
           </View>
