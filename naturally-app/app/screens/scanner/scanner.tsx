@@ -1,13 +1,13 @@
 import { Image } from 'expo-image';
 import { Keyboard, StyleSheet, TouchableWithoutFeedback, View, ScrollView } from 'react-native';
-import { Appbar, Button, Divider, IconButton } from 'react-native-paper';
+import { Appbar, Button, Divider, Searchbar } from 'react-native-paper';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { colors } from '@/app/theme';
 import NaturallyText from '@/components/naturally-text';
-import NaturallyInput from '@/components/naturally-input';
 import { getProductData } from '@/app/services/food-scan-service';
 import requestPermissions from '@/app/services/permissions-service';
+import NaturallySearch from '@/components/naturally-search';
 
 export default function ScannerScreen() {
   const [barcode, setBarcode] = useState('');
@@ -22,9 +22,7 @@ export default function ScannerScreen() {
     const product = await getProductData(barcode);
 
     if(product) {
-        setTimeout(
-            () => router.navigate({pathname: '/screens/product-details/product-details', params: { productJson: JSON.stringify(product) }}),
-            500);
+      router.navigate({pathname: '/screens/product-details/product-details', params: { productJson: JSON.stringify(product) }})
     }
   }
 
@@ -43,19 +41,11 @@ export default function ScannerScreen() {
             <Divider style={{marginBottom: 15, backgroundColor: colors.colors.border, height: 2}}></Divider>
             <NaturallyText variant='medium'>Or, input the barcode yourself:</NaturallyText>
             <View style={styles.row}>
-              <NaturallyInput 
-                keyboardType='number-pad'
-                onChangeText={setBarcode}>
-              </NaturallyInput>
-              <IconButton
-                mode='contained'
-                icon='magnify'
-                iconColor='white'
-                containerColor={colors.colors.primary}
-                size={30}
-                style={{borderRadius: 10}}
-                onPress={onSearch}>
-              </IconButton>
+              <NaturallySearch 
+                onChangeText={setBarcode}
+                value={barcode}
+                keyboardType='numeric'
+                onSubmit={onSearch}/>
             </View>
           </View>
         </TouchableWithoutFeedback>

@@ -12,8 +12,6 @@ export async function getProductData(
                 'Product not found.',
                 'Consider contributing to Open Food Facts!');
 
-            console.log('error123');
-            
             return undefined;
         }
         return product;

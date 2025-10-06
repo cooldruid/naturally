@@ -13,13 +13,6 @@ export default async function requestPermissions() {
                 buttonNegative: 'Cancel',
                 buttonPositive: 'OK',
             });
-        
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            console.log('Camera permission granted');
-        } 
-        else {
-            console.log('Camera permission denied');
-        }
     } catch (err) {
         console.warn(err);
     }

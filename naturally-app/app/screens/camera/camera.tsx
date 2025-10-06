@@ -1,6 +1,6 @@
 import { getProductData } from '@/app/services/food-scan-service';
 import { useRouter } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Alert, Platform, Text } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
 
@@ -17,12 +17,6 @@ export default function CameraScreen() {
     }
 
     const lastScans = useRef<string[]>([]);
-
-    useEffect(() => {
-        return () => {
-            console.log('CameraScreen unmounted');
-        };
-    }, []);
 
     const codeScanner = useCodeScanner({
         codeTypes: ['ean-13'],
