@@ -18,8 +18,7 @@ export async function getOpenFoodFactsProductData(barcode: string): Promise<Prod
         });
 
         const productResponse = resp.data;
-        console.log(productResponse);
-
+        
         if(productResponse.status == 0)
             return undefined;
 
