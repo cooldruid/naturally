@@ -1,5 +1,5 @@
 import { getOpenFoodFactsProductData } from "../clients/open-food-facts-client";
-import showSimpleAsyncAlert from "./alert-service";
+import showSimpleAsyncAlert from "../utilities/alert";
 import { Product } from "../types/product";
 
 export async function getProductData(

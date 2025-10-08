@@ -31,6 +31,8 @@ export default function ScannerScreen() {
         <Appbar.Header style={styles.header}>
           <Image source={require('@/assets/images/logo.png')}
             style={styles.logo}></Image>
+          
+          <Appbar.Action icon='cog' style={{alignSelf: 'flex-start', left: '40%'}}/>
         </Appbar.Header>
           
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -63,7 +65,6 @@ const styles = StyleSheet.create({
   },
   header: {
     flex:1, 
-    justifyContent: 'center', 
     backgroundColor: colors.colors.surface, 
     borderBottomColor: colors.colors.border, 
     borderBottomWidth: 2,
@@ -74,6 +75,7 @@ const styles = StyleSheet.create({
     height: 80,
     width: '50%',
     alignSelf: 'center',
+    left: '25%',
     marginTop: 18
   },
   row: {

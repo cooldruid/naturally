@@ -1,7 +1,8 @@
 import { getProductData } from '@/app/services/food-scan-service';
 import { useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Alert, Platform, Text } from 'react-native';
+import { Alert, Platform, Text, View } from 'react-native';
+import { Icon } from 'react-native-paper';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
 
 export default function CameraScreen() {
@@ -51,6 +52,9 @@ export default function CameraScreen() {
 
     return <>
         {Platform.OS === 'android' && ( <Text style={{ zIndex: 1, position: 'absolute'}} >{' '}</Text> )} 
+        <View style={{opacity:0.4, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', zIndex: 20}}>
+            <Icon source='barcode-scan' size={280} color='grey'/>
+        </View>
         <Camera style={{flex: 1}}
             device={device}
             isActive={isActive}
