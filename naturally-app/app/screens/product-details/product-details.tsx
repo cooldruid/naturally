@@ -5,7 +5,7 @@ import NaturallyText from "@/components/naturally-text";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, Image, StyleSheet, View } from "react-native";
-import { Appbar, Icon, Text } from "react-native-paper";
+import { Appbar, Icon } from "react-native-paper";
 
 export default function ProductDetailsScreen() {
     const [userSettings, setUserSettings] = useState<UserSettings | undefined>(undefined);
